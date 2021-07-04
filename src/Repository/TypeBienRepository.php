@@ -19,6 +19,37 @@ class TypeBienRepository extends ServiceEntityRepository
         parent::__construct($registry, TypeBien::class);
     }
 
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+    public function findCampingBien() {
+        $entityManager = $this->getEntityManager();
+        $entityManager->createQuery(
+        'SELECT * 
+        FROM bien AS b
+        JOIN type_bien AS tb
+        ON b.type_id = tb.id
+        WHERE proprietaire_id = 31
+        '
+        );
+    }
+
+    public function selectLabel() {
+        $entityManager = $this->getEntityManager();
+
+         $entityManager->createQuery(
+            'SELECT b, tb
+            FROM App\Entity\Bien b
+            JOIN tp.id tb
+            WHERE b.type_id = tp.id
+            AND 
+            '
+        );
+    }
     // /**
     //  * @return TypeBien[] Returns an array of TypeBien objects
     //  */

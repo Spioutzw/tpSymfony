@@ -19,6 +19,14 @@ class LigneFacturationRepository extends ServiceEntityRepository
         parent::__construct($registry, LigneFacturation::class);
     }
 
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+
     // /**
     //  * @return LigneFacturation[] Returns an array of LigneFacturation objects
     //  */

@@ -30,7 +30,7 @@ class Client
     private $Prenom;
 
     /**
-     * @ORM\Column(type="string", length=15)
+     * @ORM\Column(type="string", length=20)
      */
     private $Telephone;
 

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Location{% endblock %}
+
+{% block body %}
+    <h1>Location</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ location.id }}</td>
+            </tr>
+            <tr>
+                <th>DateArrive</th>
+                <td>{{ location.DateArrive ? location.DateArrive|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateDepart</th>
+                <td>{{ location.dateDepart ? location.dateDepart|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>NbrJourPiscineAdulte</th>
+                <td>{{ location.nbrJourPiscineAdulte }}</td>
+            </tr>
+            <tr>
+                <th>NbrJourPiscineEnfant</th>
+                <td>{{ location.nbrJourPiscineEnfant }}</td>
+            </tr>
+            <tr>
+                <th>NbrEnfant</th>
+                <td>{{ location.nbrEnfant }}</td>
+            </tr>
+            <tr>
+                <th>NbrAdulte</th>
+                <td>{{ location.nbrAdulte }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('location_index') }}">back to list</a>
+
+    <a href="{{ path('location_edit', {'id': location.id}) }}">edit</a>
+
+    {{ include('location/_delete_form.html.twig') }}
+{% endblock %}

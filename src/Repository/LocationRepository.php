@@ -19,6 +19,14 @@ class LocationRepository extends ServiceEntityRepository
         parent::__construct($registry, Location::class);
     }
 
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+
     // /**
     //  * @return Location[] Returns an array of Location objects
     //  */

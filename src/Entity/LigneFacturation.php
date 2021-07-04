@@ -23,7 +23,7 @@ class LigneFacturation
     private $Libelle;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      */
     private $Prix;
 
@@ -54,12 +54,12 @@ class LigneFacturation
         return $this;
     }
 
-    public function getPrix(): ?int
+    public function getPrix(): ?float
     {
         return $this->Prix;
     }
 
-    public function setPrix(int $Prix): self
+    public function setPrix(float $Prix): self
     {
         $this->Prix = $Prix;
 

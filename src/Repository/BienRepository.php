@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Bien;
+use App\Entity\TypeBien;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +19,26 @@ class BienRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Bien::class);
+    }
+
+
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+
+    public function selectLabel() {
+        $entityManager = $this->getEntityManager();
+
+         $entityManager->createQuery(
+            'SELECT b, tb
+            FROM App\Entity\Bien b
+            JOIN tp.id tb
+            WHERE b.type_id = tp.id'
+        );
     }
 
     // /**

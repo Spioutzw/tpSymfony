@@ -19,6 +19,14 @@ class FacturationRepository extends ServiceEntityRepository
         parent::__construct($registry, Facturation::class);
     }
 
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+
     // /**
     //  * @return Facturation[] Returns an array of Facturation objects
     //  */

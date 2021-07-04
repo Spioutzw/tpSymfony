@@ -19,6 +19,14 @@ class ProprietaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Proprietaire::class);
     }
 
+    public function resetAutoIncrement() {
+        $tableName =$this->getClassMetadata()->getTableName();
+        $connection = $this->getEntityManager()->getConnection();
+        $connection->executeStatement("ALTER TABLE " . $tableName . " AUTO_INCREMENT = 1;");
+
+    }
+
+
     // /**
     //  * @return Proprietaire[] Returns an array of Proprietaire objects
     //  */

@@ -25,7 +25,7 @@ class TypeBien
     private $Label;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
     private $Prix;
 
@@ -56,12 +56,12 @@ class TypeBien
         return $this;
     }
 
-    public function getPrix(): ?float
+    public function getPrix(): ?int
     {
         return $this->Prix;
     }
 
-    public function setPrix(float $Prix): self
+    public function setPrix(int $Prix): self
     {
         $this->Prix = $Prix;
 

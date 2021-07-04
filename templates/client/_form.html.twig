@@ -1,0 +1,24 @@
+<div class="container">
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col">
+               {{ form_start(form) }}
+                <div class="row">
+                    <div class="col-6">{{ form_row(form.Nom) }}</div>
+                    <div class="col-6">{{ form_row(form.Prenom) }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-4">{{ form_row(form.Telephone) }}</div>
+                    <div class="col-4">{{ form_row(form.Email) }}</div>
+                    <div class="col-4">{{ form_row(form.Adresse) }}</div>
+                </div>
+                <div class="row">
+                    {# <div class="col">{{ form_row(form.imageFile) }}</div> #}
+                </div>
+               {{ form_rest(form) }}
+               {{ form_end(form) }}
+            </div>
+        </div>
+
+    </div>
