@@ -18,6 +18,7 @@ use App\Repository\TypeBienRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
+use Symfony\Component\Validator\Constraints\Date;
 
 class AppFixtures extends Fixture
 {
@@ -102,6 +103,7 @@ class AppFixtures extends Fixture
             for ($i=0; $i < 10 ; $i++) { 
                 $caravane = new Bien();
                 $caravane->setProprietaire($this->getReference('P31'))
+                ->setUpdatedAt(new \DateTime( ))
                 ->setType($this->getReference('T'. rand(4,7)));
                 $manager->persist($caravane);
             }
@@ -110,6 +112,7 @@ class AppFixtures extends Fixture
             for ($i=0; $i < 30 ; $i++) { 
                 $emplacement = new Bien();
                 $emplacement->setProprietaire($this->getReference('P31'))
+                ->setUpdatedAt(new \DateTime( ))
                 ->setType($this->getReference('T'. rand(7,8)));
                 $manager->persist($emplacement);
             }
@@ -117,6 +120,7 @@ class AppFixtures extends Fixture
             for ($i=0; $i < 20 ; $i++) { 
                 $mobilhome = new Bien();
                 $mobilhome->setProprietaire($this->getReference('P31'))
+                ->setUpdatedAt(new \DateTime( ))
                 ->setType($this->getReference('T'. rand(0,3)));
                 $manager->persist($mobilhome);
             }
@@ -124,6 +128,7 @@ class AppFixtures extends Fixture
             for ($i=0; $i < 30 ; $i++) { 
                 $mobilhomePropri = new Bien();
                 $mobilhomePropri->setProprietaire($this->getReference('P'. rand(0,14)))
+                ->setUpdatedAt(new \DateTime( ))
                 ->setType($this->getReference('T'. rand(0,3)));
                 $manager->persist($mobilhomePropri);
             }
