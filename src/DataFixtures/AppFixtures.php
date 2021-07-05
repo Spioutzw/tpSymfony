@@ -63,7 +63,7 @@ class AppFixtures extends Fixture
         $this->repoProprietaire->resetAutoIncrement();
         $this->repoTypeBien->resetAutoIncrement();
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 15; $i++) {
             $proprietaire = new Proprietaire();
             $proprietaire->setAdresse($faker->address)
                 ->setNom($faker->name)
@@ -114,7 +114,7 @@ class AppFixtures extends Fixture
                 $manager->persist($emplacement);
             }
 
-            for ($i=0; $i < 30 ; $i++) { 
+            for ($i=0; $i < 20 ; $i++) { 
                 $mobilhome = new Bien();
                 $mobilhome->setProprietaire($this->getReference('P31'))
                 ->setType($this->getReference('T'. rand(0,3)));
@@ -123,7 +123,7 @@ class AppFixtures extends Fixture
 
             for ($i=0; $i < 30 ; $i++) { 
                 $mobilhomePropri = new Bien();
-                $mobilhomePropri->setProprietaire($this->getReference('P'. rand(0,29)))
+                $mobilhomePropri->setProprietaire($this->getReference('P'. rand(0,14)))
                 ->setType($this->getReference('T'. rand(0,3)));
                 $manager->persist($mobilhomePropri);
             }

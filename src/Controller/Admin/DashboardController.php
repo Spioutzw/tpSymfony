@@ -52,8 +52,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Propriétaire', 'fas fa-list', Proprietaire::class);
         yield MenuItem::linkToCrud('Client', 'fas fa-list', Client::class);
-        yield MenuItem::linkToCrud('TypeBien', 'fas fa-list', TypeBien::class);
-        yield MenuItem::linkToCrud('Bien', 'fas fa-list', Bien::class);
+        yield MenuItem::linkToCrud('Prix des biens', 'fas fa-list', TypeBien::class);
+        yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
 
     }
 }

@@ -9,9 +9,14 @@ use App\Repository\TypeBienRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Doctrine\ORM\EntityRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use PhpParser\Node\Expr\Yield_;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class BienCrudController extends AbstractCrudController
 {
@@ -33,10 +38,21 @@ class BienCrudController extends AbstractCrudController
     
     public function configureFields(string $pageName): iterable
     {
-          yield IdField::new('Id');
-          yield FormField::addPanel('TypeBien');
-          yield AssociationField::new('Type');
+          yield IdField::new('id')->onlyOnIndex();
+          yield AssociationField::new('Type','Type de bien');
           yield AssociationField::new('Proprietaire');
+          yield TextField::new('imageFile','Image')
+          ->setFormType(VichImageType::class)
+          ->onlyWhenUpdating()
+          ->setTranslationParameters(['form.label.delete'=>'Delete'])
+          
+          ;
+          yield ImageField::new('image')
+          ->setBasePath('/images/biens')
+          ->onlyOnIndex()
+          ;
+          
+
     
     }
     
