@@ -6,11 +6,13 @@ use App\Repository\ProprietaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ProprietaireRepository::class)
+ * @method string getUserIdentifier()
  */
-class Proprietaire
+class Proprietaire implements UserInterface, \Serializable
 {
     /**
      * @ORM\Id
@@ -170,4 +172,60 @@ class Proprietaire
 
         return $this;
     }
+
+    public function getRoles()
+    {
+
+        if($this->Role == 1){
+        return ['ROLE_ADMIN'];
+        } else if($this->Role == 0)
+        {
+        return ['ROLE_PROPRIO'];
+        }
+
+        
+    }
+
+    public function getSalt()
+    {
+        return null;
+    }
+
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+
+    public function getUsername()
+    {
+        return $this->getEmail();
+    }
+
+    public function getPassword()
+    {
+        return $this->getPass();
+    }
+
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement @method string getUserIdentifier()
+    }
+
+    public function serialize()
+    {
+        return serialize([
+            $this->id,
+            $this->Email,
+            $this->Pass
+        ]);
+    }
+
+    public function unserialize($serialized)
+    {
+        list($this->id, $this->Email, $this->Pass) =
+            unserialize($serialized, ["allowed_classes" => false]);
+    }
+
 }

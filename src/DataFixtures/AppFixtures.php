@@ -18,6 +18,7 @@ use App\Repository\TypeBienRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 class AppFixtures extends Fixture
@@ -28,7 +29,8 @@ class AppFixtures extends Fixture
         $repoLigneFacturation,
         $repoLocation,
         $repoProprietaire,
-        $repoTypeBien;
+        $repoTypeBien,
+        $encoder;
 
     public function __construct(
         BienRepository $bienRepository,
@@ -37,7 +39,8 @@ class AppFixtures extends Fixture
         LigneFacturationRepository $ligneFacturationRepository,
         LocationRepository $locationRepository,
         ProprietaireRepository $proprietaireRepository,
-        TypeBienRepository $typeBienRepository
+        TypeBienRepository $typeBienRepository,
+        UserPasswordHasherInterface $encoder
          )
     {
         $this->repoBien = $bienRepository;
@@ -47,6 +50,7 @@ class AppFixtures extends Fixture
         $this->repoLocation = $locationRepository;
         $this->repoProprietaire = $proprietaireRepository;
         $this->repoTypeBien = $typeBienRepository;
+        $this->encoder = $encoder;
 
     }
 
@@ -71,7 +75,7 @@ class AppFixtures extends Fixture
                 ->setEmail($faker->companyEmail)
                 ->setTelephone($faker->phoneNumber)
                 ->setRole(false)
-                ->setPass($faker->password);
+                ->setPass($this->encoder->hashPassword($proprietaire,'demo'));
             $this->setReference('P'.$i, $proprietaire);
             $manager->persist($proprietaire);
         }
@@ -82,7 +86,7 @@ class AppFixtures extends Fixture
             ->setEmail($faker->companyEmail)
             ->setTelephone($faker->phoneNumber)
             ->setRole(true)
-            ->setPass($faker->password);
+            ->setPass($this->encoder->hashPassword($campingProprietaire,'demo'));
         $this->setReference('P31', $campingProprietaire);
         $manager->persist($campingProprietaire);
 

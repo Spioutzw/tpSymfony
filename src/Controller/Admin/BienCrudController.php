@@ -8,6 +8,9 @@ use App\Repository\BienRepository;
 use App\Repository\TypeBienRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -32,8 +35,6 @@ class BienCrudController extends AbstractCrudController
         return Bien::class;
     }
 
-   
-
     
     public function configureFields(string $pageName): iterable
     {
@@ -42,10 +43,7 @@ class BienCrudController extends AbstractCrudController
           yield AssociationField::new('Proprietaire');
           yield TextField::new('imageFile','Image')
           ->hideOnIndex()
-          ->setFormType(VichImageType::class)
-          ->setTranslationParameters(['form.label.delete'=>'Delete'])
-          
-          ;
+          ->setFormType(VichImageType::class);
           yield ImageField::new('image')
           ->setBasePath('/images/biens')
           ->onlyOnIndex()
