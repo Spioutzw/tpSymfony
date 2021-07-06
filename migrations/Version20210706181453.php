@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210706065756 extends AbstractMigration
+final class Version20210706181453 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -22,7 +22,7 @@ final class Version20210706065756 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE bien (id INT AUTO_INCREMENT NOT NULL, proprietaire_id INT NOT NULL, type_id INT NOT NULL, image VARCHAR(255) DEFAULT NULL, updated_at DATETIME NOT NULL, INDEX IDX_45EDC38676C50E4A (proprietaire_id), INDEX IDX_45EDC386C54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE client (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(50) NOT NULL, prenom VARCHAR(50) NOT NULL, telephone VARCHAR(20) NOT NULL, email VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, accord TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE facturation (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, date_facturation DATE NOT NULL, numÃero_identification INT NOT NULL, INDEX IDX_17EB513A19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE facturation (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, date_facturation DATE NOT NULL, numero_identification INT NOT NULL, INDEX IDX_17EB513A19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ligne_facturation (id INT AUTO_INCREMENT NOT NULL, facture_id INT DEFAULT NULL, libelle VARCHAR(150) NOT NULL, prix DOUBLE PRECISION NOT NULL, reference INT NOT NULL, INDEX IDX_740E910D7F2DEE08 (facture_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE location (id INT AUTO_INCREMENT NOT NULL, bien_id INT NOT NULL, client_id INT NOT NULL, date_arrive DATE NOT NULL, date_depart DATE NOT NULL, nbr_jour_piscine_adulte INT NOT NULL, nbr_jour_piscine_enfant INT NOT NULL, nbr_enfant INT NOT NULL, nbr_adulte INT NOT NULL, INDEX IDX_5E9E89CBBD95B80F (bien_id), INDEX IDX_5E9E89CB19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE proprietaire (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, telephone VARCHAR(20) NOT NULL, email VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, pass VARCHAR(150) NOT NULL, role TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');

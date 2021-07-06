@@ -27,7 +27,7 @@ class Facturation
     /**
      * @ORM\Column(type="integer")
      */
-    private $numÃeroIdentification;
+    private $numeroIdentification;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="facturations")
@@ -61,14 +61,14 @@ class Facturation
         return $this;
     }
 
-    public function getNumÃeroIdentification(): ?int
+    public function getNumeroIdentification(): ?int
     {
-        return $this->numÃeroIdentification;
+        return $this->numeroIdentification;
     }
 
-    public function setNumÃeroIdentification(int $numÃeroIdentification): self
+    public function setNumeroIdentification(int $numï¿½eroIdentification): self
     {
-        $this->numÃeroIdentification = $numÃeroIdentification;
+        $this->numï¿½eroIdentification = $numï¿½eroIdentification;
 
         return $this;
     }

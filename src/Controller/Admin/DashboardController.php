@@ -33,13 +33,13 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-        $utilisateur = $this->getUser();
-        if($utilisateur && in_array('ROLE_ADMIN', $utilisateur->getRoles())){
+        
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->render('admin/dashbord.html.twig');
-    } else {
-         return $this->redirectToRoute('login');
-    }
-       
+        } else {
+            return $this->redirectToRoute('app_login');
+        }
+
         //return $this->render('admin/dashbord.html.twig');
     }
 
@@ -66,7 +66,7 @@ class DashboardController extends AbstractDashboardController
         ]);
     }
 
- 
+
 
 
     public function configureDashboard(): Dashboard
@@ -81,13 +81,12 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
 
         if ($this->isGranted('ROLE_ADMIN')) {
-        yield MenuItem::linkToCrud('Propriétaire', 'fas fa-list', Proprietaire::class);
-        yield MenuItem::linkToCrud('Client', 'fas fa-list', Client::class);
-        yield MenuItem::linkToCrud('Prix des biens', 'fas fa-list', TypeBien::class);
-        yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class)->setController(ProprietaireCrudController::class);
+            yield MenuItem::linkToCrud('Propriétaire', 'fas fa-list', Proprietaire::class);
+            yield MenuItem::linkToCrud('Client', 'fas fa-list', Client::class);
+            yield MenuItem::linkToCrud('Prix des biens', 'fas fa-list', TypeBien::class);
+            yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
+        } else if ($this->isGranted('ROLE_PROPRIO')) {
+            yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
         }
-        
-        
-
     }
 }

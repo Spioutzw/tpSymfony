@@ -29,8 +29,7 @@ class BienRepository extends ServiceEntityRepository
 
     }
 
-
-    public function selectLabel() {
+    public function selectById() {
         $entityManager = $this->getEntityManager();
 
          $entityManager->createQuery(
@@ -40,6 +39,18 @@ class BienRepository extends ServiceEntityRepository
             WHERE b.type_id = tp.id'
         );
     }
+
+
+    public function findById($id)
+    {
+        return $this->createQueryBuilder("l")
+            ->where("l.id = :id")
+            ->setParameter('id', $id)
+            ->getQuery() // construction de la requete sql
+            ->getResult(); // retour d'un tableau d'objet hydraté selon les données de la base
+    }
+
+    
 
     // /**
     //  * @return Bien[] Returns an array of Bien objects

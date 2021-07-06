@@ -176,9 +176,11 @@ class Proprietaire implements UserInterface, \Serializable
     public function getRoles()
     {
 
-        if($this->Role == 1){
+        if($this->Role == true){
         return ['ROLE_ADMIN'];
-        } else if($this->Role == 0)
+
+        } 
+        else if($this->Role == false)
         {
         return ['ROLE_PROPRIO'];
         }
