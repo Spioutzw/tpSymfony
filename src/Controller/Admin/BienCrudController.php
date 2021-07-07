@@ -41,6 +41,7 @@ class BienCrudController extends AbstractCrudController
         return Bien::class;
     }
 
+   
 
     public function configureFields(string $pageName): iterable
     {
@@ -48,9 +49,12 @@ class BienCrudController extends AbstractCrudController
         yield AssociationField::new('Type', 'Type de bien');
 
         if ($this->isGranted('ROLE_PROPRIO')) {
-            yield AssociationField::new('Proprietaire')->setFormTypeOptions(['query_builder' => function (BienRepository $em) {
-                return $em->createQueryBuilder('P')->andWhere('P.proprietaire_id = 1');
-            }]);
+            yield AssociationField::new('Proprietaire')->setQueryBuilder(function(BienRepository $bienRepository) {
+                 $bienRepository->findById($this->getUser());
+            })
+            ;
+            
+            
         } else if($this->isGranted('ROLE_ADMIN')) {
             yield AssociationField::new('Proprietaire');
         }

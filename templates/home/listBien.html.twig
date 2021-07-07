@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="jumbotron text-capitalize text-center">
+        <h2>Liste des Biens</h2>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row d-flex flex-row justify-content-center">
+                    {% for result in results %}
+                        <div class="card mb-2 mr-2" style="width: 30%;">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ result.Type }}</h4>
+                                <h4 class="card-title">{{ result.Proprietaire }}</h4>
+
+                                {#            <a href="/detail/{book.id}" class="btn btn-primary btn-sm">détail</a>#}
+                                {# <a href="{{ path('det', { id: book.id } ) }}" class="btn btn-primary btn-sm">détail</a> #}
+                                <img class="card-img" src="{{ vich_uploader_asset(result, 'imageFile') }}"></img>
+                            </div>
+                            <div class="card-footer">
+                                  <a class="btn btn-primary" href="{{path('det',{id: result.id})}}" role="button">Détail</a>  
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block title %}Bienvenue{% endblock %}

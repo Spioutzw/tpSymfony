@@ -115,6 +115,12 @@
     "jms/metadata": {
         "version": "2.5.0"
     },
+    "knplabs/knp-components": {
+        "version": "v3.1.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v5.6.0"
+    },
     "laminas/laminas-code": {
         "version": "4.4.0"
     },
@@ -135,6 +141,9 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "roomify/bat": {
+        "version": "1.4.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",

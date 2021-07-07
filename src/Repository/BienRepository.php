@@ -44,7 +44,7 @@ class BienRepository extends ServiceEntityRepository
     public function findById($id)
     {
         return $this->createQueryBuilder("l")
-            ->where("l.id = :id")
+            ->where("l.Proprietaire = :id")
             ->setParameter('id', $id)
             ->getQuery() // construction de la requete sql
             ->getResult(); // retour d'un tableau d'objet hydraté selon les données de la base

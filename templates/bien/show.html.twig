@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bien{% endblock %}
+
+{% block body %}
+    <h1>Bien</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Propriétaire</th>
+                <td>{{ biens.Proprietaire.Nom }}</td>
+            </tr>
+            <tr>
+                <th>Type de bien</th>
+                <td>{{ biens.Type.Label }}</td>
+            </tr>
+
+            <tr>
+                <th>Image</th>
+                <td><img src="{{ vich_uploader_asset(biens, 'imageFile') }}" alt=""></td>
+            </tr>
+            <tr>
+                <th>Prix par jour</th>
+                <td>{{ biens.Type.Prix}}€</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('lb') }}">back to list</a>
+
+{% endblock %}
