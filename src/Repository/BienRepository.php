@@ -32,12 +32,12 @@ class BienRepository extends ServiceEntityRepository
     public function selectById() {
         $entityManager = $this->getEntityManager();
 
-         $entityManager->createQuery(
+         return $entityManager->createQuery(
             'SELECT b, tb
-            FROM App\Entity\Bien b
-            JOIN tp.id tb
-            WHERE b.type_id = tp.id'
-        );
+            FROM App\Entity\Bien as b
+            JOIN tb.id as tb
+            WHERE b.type_id = tb.id'
+        )->getResult();
     }
 
 
@@ -46,8 +46,9 @@ class BienRepository extends ServiceEntityRepository
         return $this->createQueryBuilder("l")
             ->where("l.Proprietaire = :id")
             ->setParameter('id', $id)
-            ->getQuery() // construction de la requete sql
-            ->getResult(); // retour d'un tableau d'objet hydraté selon les données de la base
+            ->getQuery()
+            ->getResult()
+            ; // retour d'un tableau d'objet hydraté selon les données de la base
     }
 
     

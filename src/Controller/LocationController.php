@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Location;
 use App\Form\LocationType;
+use App\Repository\BienRepository;
 use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,22 +30,32 @@ class LocationController extends AbstractController
     /**
      * @Route("/new", name="location_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new($bien_id, Request $request, BienRepository $bienRepository): Response
     {
+        dump($_POST);
+        dump($_GET);
         $location = new Location();
+        $client = new Client();
         $form = $this->createForm(LocationType::class, $location);
         $form->handleRequest($request);
+        $bien = $bienRepository->findById($bien_id);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $location->setClient($client);
+            $location->setBien($bien);
             $entityManager->persist($location);
+            $entityManager->persist($client);
             $entityManager->flush();
+            dump($_POST);
+        dump($_GET);
 
             return $this->redirectToRoute('location_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('location/new.html.twig', [
             'location' => $location,
+            'bien' => $bien,
             'form' => $form,
         ]);
     }

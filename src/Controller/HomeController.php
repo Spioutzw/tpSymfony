@@ -4,7 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Bien;
 use App\Repository\BienRepository;
+use Knp\Component\Pager\Paginator;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -36,17 +39,17 @@ class HomeController extends AbstractController
      * @Route("/listbiens", name="lb")
      */
 
-     public function listBien(BienRepository $bienRepository): Response
+     public function listBien(BienRepository $bienRepository, PaginatorInterface $paginator, Request $request): Response
      {
-        $results = $bienRepository->findAll();
-
+        $results = $paginator->paginate($bienRepository->findAll(),$request->query->getInt('page',1),9);
+        
          return $this->render('home/listBien.html.twig', [
             'results' => $results,
          ]);
      }
 
      /**
-      * @Route("/listbiens/{id}", methods={"GET"}, name="det")
+      * @Route("/listbiens/{id}", methods={"GET","POST"}, name="det")
       */
 
      public function detailBook(int $id)

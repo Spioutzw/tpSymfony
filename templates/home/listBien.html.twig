@@ -9,7 +9,7 @@
             <div class="col">
                 <div class="row d-flex flex-row justify-content-center">
                     {% for result in results %}
-                        <div class="card mb-2 mr-2" style="width: 30%;">
+                        <div class="card mb-4 me-4" style="width: 30%;">
                             <div class="card-body">
                                 <h4 class="card-title">{{ result.Type }}</h4>
                                 <h4 class="card-title">{{ result.Proprietaire }}</h4>
@@ -23,8 +23,10 @@
                             </div>
 
                         </div>
-
-                    {% endfor %}
+                            {% endfor %}
+                            <div class=" d-flex justify-content-end">
+                                 {{ knp_pagination_render(results) }}
+                            </div>
                 </div>
 
             </div>

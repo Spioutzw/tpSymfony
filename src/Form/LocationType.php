@@ -19,25 +19,14 @@ class LocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('Client',ClientType::class)
             ->add('DateArrive')
             ->add('dateDepart')
             ->add('nbrJourPiscineAdulte')
             ->add('nbrJourPiscineEnfant')
             ->add('nbrEnfant')
             ->add('nbrAdulte')
-            ->add('Bien', EntityType::class, [
-                'class' => TypeBien::class,
-                'query_builder' => function(TypeBienRepository $typebienrepo){
-                    return $typebienrepo->selectLabel();
-                },
-                'choice_label' => 'label',
-                'required' => true,
-
-                ])
-            ->add('Client', EntityType::class, [
-                'class' => Client::class,
-                'choice_label' => 'Nom'
-            ])
+            
             ->add('submit', SubmitType::class, ['label' => 'Enregistrer'])
         ;
     }

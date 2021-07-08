@@ -29,4 +29,6 @@
 
     <a href="{{ path('lb') }}">back to list</a>
 
+    {{render(path('location_new',{'bien_id' : biens.id}))}}
+
 {% endblock %}
