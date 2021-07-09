@@ -19,6 +19,7 @@ class ClientType extends AbstractType
             ->add('Email')
             ->add('Adresse')
             ->add('Accord')
+            //->add('Submit',SubmitType::class)
         ;
     }
 
