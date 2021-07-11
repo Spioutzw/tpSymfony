@@ -2,14 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Bien;
+use App\Entity\Facturation;
+use App\Entity\LigneFacturation;
+use App\Entity\Location;
+use App\Form\LocationType;
 use App\Repository\BienRepository;
-use Knp\Component\Pager\Paginator;
+use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Faker;
 
 class HomeController extends AbstractController
 {
@@ -52,12 +56,50 @@ class HomeController extends AbstractController
       * @Route("/listbiens/{id}", methods={"GET","POST"}, name="det")
       */
 
-     public function detailBook(int $id)
+     public function detailBook(int $id, Request $request)
      {
- //        $livre = $livreRepository->find($id);
-         $biens =$this->repoBien->find($id);
+
+        define("piscineEnfant", 1  );
+        define("piscineAdulte", 1.5  );
+        
+
+        $faker = Faker\Factory::create('fr_FR');
+
+         $location = new Location();
+         $facture = new Facturation();
+         $ligneFacture= new LigneFacturation();
+
+         $bien = $this->repoBien->find($id);
+         $location->setBien($bien);
+         
+
+
+         $facture->setClient($_POST['location']["Client"])
+         ->setDateFacturation(new DateTime("now"))
+         ->setNumeroIdentification($faker->bankAccountNumber);
+
+         $ligneFacture->setFacture($facture->getId())
+         ->setPrix($bien->getType()->getPrix() * ($location->getDateArrive() - $location->getDateDepart()) + $location->getNbrJourPiscineAdulte() * piscineAdulte + $location->getNbrJourPiscineEnfant() * piscineEnfant )
+         ->setReference($faker->randomNumber())
+         ->setLibelle();
+
+
+         $form = $this->createForm(LocationType::class, $location);
+         $form->handleRequest($request);
+
+
+         if ($form->isSubmitted() && $form->isValid()) {
+
+             $entityManager = $this->getDoctrine()->getManager();
+             $entityManager->persist($location);
+             $entityManager->flush();
+             return $this->redirectToRoute('location_index', [], Response::HTTP_SEE_OTHER);
+
+         }
+
          return $this->render("bien/show.html.twig",[
-             'biens' => $biens
+             'biens' => $bien,
+             'form' => $form->createView()
          ]);
      }
 }

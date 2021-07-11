@@ -29,7 +29,7 @@
 
     <a href="{{ path('lb') }}">back to list</a>
 
-    {# {% include "location/new.html.twig" with {'form' : form} %} #}
-    {{render(path('location_new',{id : biens.id}))}}
+  {{ form_start(form) }}
+  {{ form_widget(form) }}
 
 {% endblock %}

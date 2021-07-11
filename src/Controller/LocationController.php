@@ -35,75 +35,7 @@ class LocationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new/{id}", name="location_new", methods={"GET","POST"})
-     */
-    public function new(int $id , Request $request): Response
-    {
-        
-        $location = new Location();
-        $client = new Client();
-        $form = $this->createForm(LocationType::class, $location);
-        $bien = $this->repoBien->find($id);
-        $form->handleRequest($request);
-        
-
-       // $request->request->get("location")[""]
-
-        dump($bien);
-        dump($form);
-        dump($client);
-        dump('tata');
-        
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $entityManager = $this->getDoctrine()->getManager();
-
-            $client->setNom($request->request->get("location")["Client"]["Nom"])
-            ->setPrenom($request->request->get("location")["Client"]["Prenom"])
-            ->setTelephone($request->request->get("location")["Client"]["Telephone"])
-            ->setEmail($request->request->get("location")["Client"]["Email"])
-            ->setAdresse($request->request->get("location")["Client"]["Adresse"])
-            ->setAccord($request->request->get("location")["Client"]["Accord"]);
-
-            $month = $request->request->get("location")["DateArrive"]["month"];
-            $day = $request->request->get("location")["DateArrive"]["day"];
-            $year = $request->request->get("location")["DateArrive"]["year"];
-            
-            $startMonth = $request->request->get("location")["dateDepart"]["month"];
-            $startDay = $request->request->get("location")["dateDepart"]["day"];
-            $startYear = $request->request->get("location")["dateDepart"]["year"];
-
-            $start = new DateTime($year . '-' . $month . '-' . $day);
-            $end = new DateTime($startYear . '-' . $startMonth . '-' . $startDay);
-
-            $location->setClient($client)
-            ->setBien($bien)
-            ->setDateArrive($start)
-            ->setDateDepart($end)
-            ->setNbrAdulte($request->request->get("location")["nbrJourPiscineAdulte"])
-            ->setNbrJourPiscineEnfant($request->request->get("location")["nbrJourPiscineEnfant"])
-            ->setNbrAdulte($request->request->get("location")["nbrNbrAdulte"])
-            ->setNbrEnfant($request->request->get("location")["nbrEnfant"])
-;
-            $entityManager->persist($location);
-            $entityManager->persist($client);
-            $entityManager->flush();
-            dump('totu');
-
-            return $this->redirectToRoute('location_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            dump('toto');
-        }
-
-        return $this->renderForm('location/new.html.twig', [
-            'location' => $location,
-            'client' => $client,
-            'form' => $form,
-
-        ]);
-    }
-
+       
     /**
      * @Route("/{id}", name="location_show", methods={"GET"})
      */

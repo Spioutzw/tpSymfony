@@ -54,7 +54,7 @@ class Location
     private $Bien;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="locations")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="locations",cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $Client;
