@@ -7,6 +7,7 @@ use App\Entity\Location;
 use App\Form\LocationType;
 use App\Repository\BienRepository;
 use App\Repository\LocationRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,7 +38,7 @@ class LocationController extends AbstractController
     /**
      * @Route("/new/{id}", name="location_new", methods={"GET","POST"})
      */
-    public function new(int $id = null , Request $request, BienRepository $bienRepository): Response
+    public function new(int $id , Request $request): Response
     {
         
         $location = new Location();
@@ -53,17 +54,38 @@ class LocationController extends AbstractController
         dump($form);
         dump($client);
         dump('tata');
-        if ($form->isSubmitted()) {
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+
             $entityManager = $this->getDoctrine()->getManager();
+
             $client->setNom($request->request->get("location")["Client"]["Nom"])
             ->setPrenom($request->request->get("location")["Client"]["Prenom"])
             ->setTelephone($request->request->get("location")["Client"]["Telephone"])
             ->setEmail($request->request->get("location")["Client"]["Email"])
             ->setAdresse($request->request->get("location")["Client"]["Adresse"])
-            ->setAccord($request->request->get("location")["Client"]["Nom"]);
-            $location->setDateArrive($request->request->get()) // Faire concatenation des dates 
-            ->setClient($client)
-            ->setBien($bien);
+            ->setAccord($request->request->get("location")["Client"]["Accord"]);
+
+            $month = $request->request->get("location")["DateArrive"]["month"];
+            $day = $request->request->get("location")["DateArrive"]["day"];
+            $year = $request->request->get("location")["DateArrive"]["year"];
+            
+            $startMonth = $request->request->get("location")["dateDepart"]["month"];
+            $startDay = $request->request->get("location")["dateDepart"]["day"];
+            $startYear = $request->request->get("location")["dateDepart"]["year"];
+
+            $start = new DateTime($year . '-' . $month . '-' . $day);
+            $end = new DateTime($startYear . '-' . $startMonth . '-' . $startDay);
+
+            $location->setClient($client)
+            ->setBien($bien)
+            ->setDateArrive($start)
+            ->setDateDepart($end)
+            ->setNbrAdulte($request->request->get("location")["nbrJourPiscineAdulte"])
+            ->setNbrJourPiscineEnfant($request->request->get("location")["nbrJourPiscineEnfant"])
+            ->setNbrAdulte($request->request->get("location")["nbrNbrAdulte"])
+            ->setNbrEnfant($request->request->get("location")["nbrEnfant"])
+;
             $entityManager->persist($location);
             $entityManager->persist($client);
             $entityManager->flush();
