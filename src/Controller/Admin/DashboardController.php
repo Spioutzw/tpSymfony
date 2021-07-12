@@ -4,6 +4,9 @@ namespace App\Controller\Admin;
 
 use App\Entity\Bien;
 use App\Entity\Client;
+use App\Entity\Facturation;
+use App\Entity\LigneFacturation;
+use App\Entity\Location;
 use App\Entity\Proprietaire;
 use App\Entity\TypeBien;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -85,8 +88,16 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToCrud('Client', 'fas fa-list', Client::class);
             yield MenuItem::linkToCrud('Prix des biens', 'fas fa-list', TypeBien::class);
             yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
+            yield MenuItem::linkToCrud('Gestions des factures', 'fas fa-list', Facturation::class );
+            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class );
+            yield MenuItem::linkToCrud('Gestions des lignes de facture', 'fas fa-list', LigneFacturation::class );
+
         } else if ($this->isGranted('ROLE_PROPRIO')) {
             yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
+            yield MenuItem::linkToCrud('Gestions des factures', 'fas fa-list', Facturation::class );
+            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class );
+            yield MenuItem::linkToCrud('Gestions des lignes de facture', 'fas fa-list', LigneFacturation::class );
+
         }
     }
 }

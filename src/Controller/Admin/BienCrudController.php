@@ -47,6 +47,7 @@ class BienCrudController extends AbstractCrudController
         yield IdField::new('id')->onlyOnIndex();
         yield AssociationField::new('Type', 'Type de bien');
         yield AssociationField::new('Proprietaire');
+       // yield AssociationField::new('Facturation');
         yield TextField::new('imageFile', 'Image')
             ->hideOnIndex()
             ->setFormType(VichImageType::class);

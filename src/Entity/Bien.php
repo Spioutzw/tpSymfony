@@ -56,6 +56,10 @@ class Bien
      */
     private $updatedAt;
 
+    public function __toString(): string
+    {
+        return $this->getid();
+    }
     
 
     public function __construct()
