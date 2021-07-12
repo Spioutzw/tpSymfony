@@ -2,27 +2,35 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Facturation;
 use App\Entity\LigneFacturation;
 use App\Entity\Location;
+use App\Entity\Tarif;
 use App\Form\LocationType;
 use App\Repository\BienRepository;
+use App\Repository\ClientRepository;
+use App\Repository\FacturationRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Faker;
 
 class HomeController extends AbstractController
 {
 
-    private $repoBien;
+    private $repoBien,
+            $repoClient,
+            $repoFacturation;
 
-    public function __construct(BienRepository $bienRepository)
+
+    public function __construct(BienRepository $bienRepository, ClientRepository $clientRepository, FacturationRepository $facturationRepository)
     {
         $this->repoBien = $bienRepository;
+        $this->repoClient = $clientRepository;
+        $this->repoFacturation = $facturationRepository;
     }
 
 
@@ -61,39 +69,59 @@ class HomeController extends AbstractController
 
         define("piscineEnfant", 1  );
         define("piscineAdulte", 1.5  );
+        define("TaxeAdulte", 0.35  );
+        define("TaxeEnfant", 0.60  );
         
 
-        $faker = Faker\Factory::create('fr_FR');
 
          $location = new Location();
          $facture = new Facturation();
-         $ligneFacture= new LigneFacturation();
+         $ligneFactureTaxe = new LigneFacturation();
+         $ligneFacturePiscine = new LigneFacturation();
+         $ligneFactureBienPrix = new LigneFacturation();
 
-         $bien = $this->repoBien->find($id);
-         $location->setBien($bien);
          
+         $lastfacture = $this->repoFacturation->findLastFacture();
+         $bien = $this->repoBien->find($id);
+       
 
-
-         $facture->setClient($_POST['location']["Client"])
-         ->setDateFacturation(new DateTime("now"))
-         ->setNumeroIdentification($faker->bankAccountNumber);
-
-         $ligneFacture->setFacture($facture->getId())
-         ->setPrix($bien->getType()->getPrix() * ($location->getDateArrive() - $location->getDateDepart()) + $location->getNbrJourPiscineAdulte() * piscineAdulte + $location->getNbrJourPiscineEnfant() * piscineEnfant )
-         ->setReference($faker->randomNumber())
-         ->setLibelle();
-
+         $location->setBien($bien);
 
          $form = $this->createForm(LocationType::class, $location);
          $form->handleRequest($request);
-
-
+         
+        
          if ($form->isSubmitted() && $form->isValid()) {
+    
+             $facture->setClient($location->getClient())
+             ->setDateFacturation(new DateTime("now"))
+             ->setNumeroIdentification( ($lastfacture) ? ($lastfacture[0]->getNumeroIdentification()) + 1 : 1) ;
 
+             $ligneFactureTaxe->setFacture($facture)
+             ->setLibelle("Taxe")
+             ->setReference(1)
+             ->setPrix(strtotime($location->getDateArrive()->diff($location->getDateDepart())->format("Y-M-D")) * $location->getNbrEnfant() * TaxeEnfant + $location->getNbrAdulte() * TaxeAdulte);
+
+             $ligneFacturePiscine->setFacture($facture)
+             ->setLibelle("Piscine")
+             ->setReference(2)
+             ->setPrix(strtotime($location->getDateArrive()->diff($location->getDateDepart())->format("Y-M-D")) * $location->getNbrJourPiscineAdulte() * piscineAdulte + $location->getNbrJourPiscineEnfant() * piscineEnfant);
+
+             $ligneFactureBienPrix->setFacture($facture)
+             ->setLibelle("Prix du bien")
+             ->setReference(3)
+             ->setPrix(($location->getDateArrive()->diff($location->getDateDepart())->format("%a")) * $location->getBien()->getType()->getPrix());
+               
+           
              $entityManager = $this->getDoctrine()->getManager();
              $entityManager->persist($location);
+             $entityManager->persist($facture);
+             $entityManager->persist($ligneFactureTaxe);
+             $entityManager->persist($ligneFacturePiscine);
+             $entityManager->persist($ligneFactureBienPrix);
              $entityManager->flush();
-             return $this->redirectToRoute('location_index', [], Response::HTTP_SEE_OTHER);
+
+             return $this->redirectToRoute('lb');
 
          }
 

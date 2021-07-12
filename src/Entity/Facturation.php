@@ -30,7 +30,7 @@ class Facturation
     private $numeroIdentification;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="facturations")
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="facturations", cascade={"persist", "remove"})
      */
     private $Client;
 
@@ -66,9 +66,9 @@ class Facturation
         return $this->numeroIdentification;
     }
 
-    public function setNumeroIdentification(int $num�eroIdentification): self
+    public function setNumeroIdentification(int $numeroIdentification): self
     {
-        $this->num�eroIdentification = $num�eroIdentification;
+        $this->numeroIdentification = $numeroIdentification;
 
         return $this;
     }

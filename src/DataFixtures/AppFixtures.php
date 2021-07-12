@@ -7,6 +7,7 @@ use App\Entity\Client;
 use App\Entity\Facturation;
 use App\Entity\Location;
 use App\Entity\Proprietaire;
+use App\Entity\Tarif;
 use App\Entity\TypeBien;
 use App\Repository\BienRepository;
 use App\Repository\ClientRepository;
@@ -136,6 +137,10 @@ class AppFixtures extends Fixture
                 ->setType($this->getReference('T'. rand(0,3)));
                 $manager->persist($mobilhomePropri);
             }
+
+            
+
+
         
             
         

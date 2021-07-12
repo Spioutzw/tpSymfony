@@ -26,6 +26,14 @@ class LigneFacturationRepository extends ServiceEntityRepository
 
     }
 
+    public function findLastFacture() {
+        return $this->createQueryBuilder('f')
+        ->orderBy('f.id',"desc")
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
+
 
     // /**
     //  * @return LigneFacturation[] Returns an array of LigneFacturation objects

@@ -27,6 +27,14 @@ class FacturationRepository extends ServiceEntityRepository
     }
 
 
+    public function findLastFacture() {
+        return $this->createQueryBuilder('f')
+        ->orderBy('f.id',"desc")
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
+
     // /**
     //  * @return Facturation[] Returns an array of Facturation objects
     //  */
