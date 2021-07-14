@@ -27,18 +27,14 @@ class BienCrudController extends AbstractCrudController
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
 
-        if ($this->isGranted('ROLE_PROPRIO')) {
+        if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
             $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
 
             $query->andWhere("entity.Proprietaire = :id")
                 ->setParameter('id', $this->getUser());
             return $query;
 
-        } else if ($this->isGranted('ROLE_ADMIN')) {
-            $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-            $query->getQuery();
-            return $query;
-        }
+        } 
     }
 
 
@@ -47,7 +43,6 @@ class BienCrudController extends AbstractCrudController
         yield IdField::new('id')->onlyOnIndex();
         yield AssociationField::new('Type', 'Type de bien');
         yield AssociationField::new('Proprietaire');
-       // yield AssociationField::new('Facturation');
         yield TextField::new('imageFile', 'Image')
             ->hideOnIndex()
             ->setFormType(VichImageType::class);

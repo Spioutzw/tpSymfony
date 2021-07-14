@@ -26,6 +26,18 @@ class LocationRepository extends ServiceEntityRepository
 
     }
 
+    // public function locationByProprio() {
+    //     return $this->createQueryBuilder("l")
+    //     ->select("l.location.*","l.proprietaire.nom")
+    //     ->from("l.location","L")
+    //     ->innerJoin("L","l.bien","b", "b.id = L.bien_id")
+    //     ->innerJoin("b","l.propietaire","p","p.id = b.proprietaire_id")
+    //     ->andWhere("l.Proprietaire = :id")
+    //     ->setParameter('id', $this->)
+        
+    //     ;
+    // }
+
 
     // /**
     //  * @return Location[] Returns an array of Location objects

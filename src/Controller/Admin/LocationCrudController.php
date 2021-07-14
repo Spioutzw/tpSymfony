@@ -2,12 +2,22 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Client;
 use App\Entity\Location;
+use App\Entity\Proprietaire;
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
 class LocationCrudController extends AbstractCrudController
 {
@@ -15,6 +25,26 @@ class LocationCrudController extends AbstractCrudController
     {
         return Location::class;
     }
+
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        
+        if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
+        
+            $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+            $query->select("entity","p.Nom","c.Nom")
+            ->join("entity.Bien","b", 'WITH',"b.id = entity.Bien")
+            ->join(Client::class,"c", 'WITH' ,"c.id = entity.Client")
+            ->join(Proprietaire::class,"p", 'WITH',"p.id = entity.Bien")
+            ->Where("p.id = :id")
+            ->setParameter('id', $this->getUser())
+            ;
+            return $query
+            //dump( $query);
+        ;
+        } 
+    }
+
 
     
     public function configureFields(string $pageName): iterable

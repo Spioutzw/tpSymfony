@@ -23,12 +23,6 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class DashboardController extends AbstractDashboardController
 {
 
-    private $adminUrlGenerator;
-
-    public function __construct(AdminUrlGenerator $adminUrlGenerator)
-    {
-        $this->adminUrlGenerator = $adminUrlGenerator;
-    }
 
     /**
      * @Route("/admin", name="admin")
@@ -45,32 +39,6 @@ class DashboardController extends AbstractDashboardController
 
         //return $this->render('admin/dashbord.html.twig');
     }
-
-    /**
-     * @Route("/new", name="client_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $client = new Client();
-        $form = $this->createForm(ClientType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($client);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('client_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('client/new.html.twig', [
-            'client' => $client,
-            'form' => $form,
-        ]);
-    }
-
-
-
 
     public function configureDashboard(): Dashboard
     {
