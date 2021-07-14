@@ -2,8 +2,21 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Bien;
+use App\Entity\Client;
+use App\Entity\Facturation;
 use App\Entity\LigneFacturation;
+use App\Entity\Location;
+use App\Entity\Proprietaire;
+use App\Repository\BienRepository;
+use Doctrine\ORM\QueryBuilder;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
+
+use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
 
 class LigneFacturationCrudController extends AbstractCrudController
 {
@@ -12,14 +25,25 @@ class LigneFacturationCrudController extends AbstractCrudController
         return LigneFacturation::class;
     }
 
-    /*
-    public function configureFields(string $pageName): iterable
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
+        
+        if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
+        
+            $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+            $query->select("entity")
+            ->innerJoin("entity.Facture", "f")
+            ->innerJoin(Client::class,"c")
+            ->innerJoin(Location::class,"l")
+            ->innerJoin(Bien::class,"b")
+            ->innerJoin(Proprietaire::class,"p")
+            ->Where("p = :id")
+            ->setParameter('id', $this->getUser())
+            ->getQuery()
+            ->getResult()
+            ;
+            return $query
+        ;
+        } 
     }
-    */
 }

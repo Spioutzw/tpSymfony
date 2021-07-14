@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Bien;
 use App\Entity\Facturation;
+use App\Entity\Location;
+use App\Entity\Proprietaire;
 use App\Repository\BienRepository;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -25,22 +27,26 @@ class FacturationCrudController extends AbstractCrudController
         return Facturation::class;
     }
 
-    // public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
-    // {
-
-    //     if ($this->isGranted('ROLE_PROPRIO')) {
-    //         $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-
-    //         $query->andWhere("entity.Proprietaire = :id")
-    //             ->setParameter('id', $this->getUser());
-    //         return $query;
-
-    //     } else if ($this->isGranted('ROLE_ADMIN')) {
-    //         $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-    //         $query->getQuery();
-    //         return $query;
-    //     }
-    // }
+    public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
+    {
+        
+        if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
+        
+            $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
+            $query->select("entity")
+            ->innerJoin("entity.Client","c")
+            ->innerJoin(Location::class,"l")
+            ->innerJoin(Bien::class,"b")
+            ->innerJoin(Proprietaire::class,"p")
+            ->Where("p = :id")
+            ->setParameter('id', $this->getUser())
+            ->getQuery()
+            ->getResult()
+            ;
+            return $query
+        ;
+        } 
+    }
 
     
     public function configureFields(string $pageName): iterable

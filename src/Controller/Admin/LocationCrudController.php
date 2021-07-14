@@ -2,14 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Client;
+
 use App\Entity\Location;
 use App\Entity\Proprietaire;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
@@ -32,21 +30,21 @@ class LocationCrudController extends AbstractCrudController
         if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
         
             $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
-            $query->select("entity","p.Nom","c.Nom")
-            ->join("entity.Bien","b", 'WITH',"b.id = entity.Bien")
-            ->join(Client::class,"c", 'WITH' ,"c.id = entity.Client")
-            ->join(Proprietaire::class,"p", 'WITH',"p.id = entity.Bien")
-            ->Where("p.id = :id")
+            $query->select("entity")
+            ->innerJoin("entity.Bien","b")
+            ->innerJoin("entity.Client","c")
+            ->innerJoin(Proprietaire::class,"p",'WITH',"p = b.Proprietaire")
+            ->Where("p = :id")
             ->setParameter('id', $this->getUser())
+            ->getQuery()
+            ->getResult()
             ;
             return $query
-            //dump( $query);
         ;
         } 
     }
 
 
-    
     public function configureFields(string $pageName): iterable
     {
         return [
@@ -58,8 +56,9 @@ class LocationCrudController extends AbstractCrudController
             IntegerField::new("NbrEnfant","Nombre d'enfant"),
             IntegerField::new("NbrAdulte","Nombre d'adulte"),
             AssociationField::new("Bien"),
-            AssociationField::new("Client")
+            AssociationField::new("Client"),
         ];
     }
+    
     
 }

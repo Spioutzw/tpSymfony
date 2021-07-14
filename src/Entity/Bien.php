@@ -58,7 +58,7 @@ class Bien
 
     public function __toString(): string
     {
-        return $this->getid();
+        return $this->getProprietaire();
     }
     
 
