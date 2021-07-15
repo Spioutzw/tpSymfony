@@ -16,7 +16,11 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
 
 class HomeController extends AbstractController
 {
@@ -64,7 +68,7 @@ class HomeController extends AbstractController
       * @Route("/listbiens/{id}", methods={"GET","POST"}, name="det")
       */
 
-     public function detailBook(int $id, Request $request)
+     public function detailBook(int $id, Request $request, MailerInterface $mailer, ClientRepository $client)
      {
 
         define("piscineEnfant", 1  );
@@ -121,7 +125,33 @@ class HomeController extends AbstractController
              $entityManager->persist($ligneFactureBienPrix);
              $entityManager->flush();
 
+             $dompdf = new Dompdf();
+
+              $html = $this->renderView("home/facture.html.twig", [
+                  'bien' => $bien,
+                  'client' => $client->findLastUser(),
+                  'location' => $location,
+                  'facture' => $facture,
+                  'ligneFactureBienPrix' => $ligneFactureBienPrix,
+                  'ligneFacturePiscine' => $ligneFacturePiscine,
+                  'ligneFactureTaxe' => $ligneFactureTaxe
+              ]);
+
+             $dompdf->loadHtml($html)
+             ->setPaper('A4');
+             $dompdf->render();
+
+
+
+             $email = (new Email())
+             ->from(new Address('matthieu.roquigny.camping@gmail.com', 'Espadrille Volante Bot'))
+             ->to($this->getUser())
+             ->subject("Facture Reservation")
+             ->attach();
+
              return $this->redirectToRoute('lb');
+
+             
 
          }
 

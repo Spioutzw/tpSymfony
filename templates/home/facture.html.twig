@@ -1,1 +1,85 @@
 {% extends "base.html.twig" %}
+
+{% block body %}
+	<div class="container mt-5 mb-3">
+		<div class="row d-flex justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="d-flex flex-row p-2">
+						<img src="https://i.imgur.com/vzlPPh3.png" width="48">
+						<div class="d-flex flex-column">
+							<span class="font-weight-bold">Facture</span>
+							<small>{{facture.numero_identification}}</small>
+                            <span>{{facture.date_facturation}}</span>
+						</div>
+					</div>
+					<hr>
+					<div class="table-responsive p-2">
+						<table class="table table-borderless">
+							<tbody>
+								<tr class="add">
+									<td>To</td>
+									<td>From</td>
+								</tr>
+								<tr class="content">
+									<td class="font-weight-bold">
+										{{client.Nom ~ client.Prenom}}
+										<br>{{client.adresse}}</td>
+									<td class="font-weight-bold">
+										{{bien.Proprietaire.Nom}}
+										<br>
+										{{bien.Proprietaire.adresse}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr>
+					<div class="products p-2">
+						<table class="table table-borderless">
+							<tbody>
+								<tr class="add">
+									<td>Description</td>
+									<td>Days</td>
+									<td>Prix</td>
+									<td class="text-center">Total</td>
+								</tr>
+								
+									<tr class="content">
+										<td>{{ligneFactureTaxe.reference}}</td>
+										<td>{{ligneFactureTaxe.libelle}}</td>
+										<td class="text-center">{{ligneFactureTaxe.prix}}</td>
+									</tr>
+
+                                    <tr class="content">
+										<td>{{ligneFactureBienPrix.reference}}</td>
+										<td>{{ligneFactureBienPrix.libelle}}</td>
+										<td class="text-center">{{ligneFactureBienPrix.prix}}</td>
+									</tr>
+
+                                    <tr class="content">
+										<td>{{ligneFacturePiscine.reference}}</td>
+										<td>{{ligneFacturePiscine.libelle}}</td>
+										<td class="text-center">{{ligneFacturePiscine.prix}}</td>
+									</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<hr>
+					<div class="products p-2">
+						<table class="table table-borderless">
+							<tbody>
+								<tr class="add">
+									<td class="text-center">Total</td>
+								</tr>
+								<tr class="content">
+									<td class="text-center">{{ligneFactureBienPrix.prix + ligneFacturePiscine.prix + ligneFactureTaxe.prix}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{%  endblock %}

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Proprietaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -18,6 +19,12 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('Email')
+            ->add('Nom')
+            ->add('Telephone')
+            ->add('Adresse')
+            ->add('Role', HiddenType::class, [
+                'empty_data' => false
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
@@ -26,7 +33,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('Pass', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
