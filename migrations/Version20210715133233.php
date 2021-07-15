@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20210712090910 extends AbstractMigration
+final class Version20210715133233 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,7 +25,7 @@ final class Version20210712090910 extends AbstractMigration
         $this->addSql('CREATE TABLE facturation (id INT AUTO_INCREMENT NOT NULL, client_id INT DEFAULT NULL, date_facturation DATE NOT NULL, numero_identification INT NOT NULL, INDEX IDX_17EB513A19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ligne_facturation (id INT AUTO_INCREMENT NOT NULL, facture_id INT DEFAULT NULL, libelle VARCHAR(150) NOT NULL, prix DOUBLE PRECISION NOT NULL, reference INT NOT NULL, INDEX IDX_740E910D7F2DEE08 (facture_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE location (id INT AUTO_INCREMENT NOT NULL, bien_id INT NOT NULL, client_id INT NOT NULL, date_arrive DATE NOT NULL, date_depart DATE NOT NULL, nbr_jour_piscine_adulte INT NOT NULL, nbr_jour_piscine_enfant INT NOT NULL, nbr_enfant INT NOT NULL, nbr_adulte INT NOT NULL, INDEX IDX_5E9E89CBBD95B80F (bien_id), INDEX IDX_5E9E89CB19EB6921 (client_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE proprietaire (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, telephone VARCHAR(20) NOT NULL, email VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, pass VARCHAR(150) NOT NULL, role TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE proprietaire (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, telephone VARCHAR(20) NOT NULL, email VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, pass VARCHAR(150) NOT NULL, role TINYINT(1) NOT NULL, is_verified TINYINT(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE type_bien (id INT AUTO_INCREMENT NOT NULL, label VARCHAR(150) NOT NULL, prix INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE bien ADD CONSTRAINT FK_45EDC38676C50E4A FOREIGN KEY (proprietaire_id) REFERENCES proprietaire (id)');
         $this->addSql('ALTER TABLE bien ADD CONSTRAINT FK_45EDC386C54C8C93 FOREIGN KEY (type_id) REFERENCES type_bien (id)');

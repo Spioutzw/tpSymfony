@@ -6,11 +6,13 @@ use App\Repository\ProprietaireRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ProprietaireRepository::class)
  * @method string getUserIdentifier()
+ * @UniqueEntity(fields={"Email"}, message="There is already an account with this Email")
  */
 class Proprietaire implements UserInterface, \Serializable
 {
@@ -55,6 +57,11 @@ class Proprietaire implements UserInterface, \Serializable
      * @ORM\OneToMany(targetEntity=Bien::class, mappedBy="Proprietaire")
      */
     private $biens;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -228,6 +235,18 @@ class Proprietaire implements UserInterface, \Serializable
     {
         list($this->id, $this->Email, $this->Pass) =
             unserialize($serialized, ["allowed_classes" => false]);
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
     }
 
 }

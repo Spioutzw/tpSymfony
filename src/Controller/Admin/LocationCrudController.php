@@ -33,7 +33,7 @@ class LocationCrudController extends AbstractCrudController
             $query->select("entity")
             ->innerJoin("entity.Bien","b")
             ->innerJoin("entity.Client","c")
-            ->innerJoin(Proprietaire::class,"p",'WITH',"p = b.Proprietaire")
+            ->innerJoin(Proprietaire::class,"p")
             ->Where("p = :id")
             ->setParameter('id', $this->getUser())
             ->getQuery()

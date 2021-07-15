@@ -38,11 +38,10 @@ class FacturationCrudController extends AbstractCrudController
             ->innerJoin(Location::class,"l")
             ->innerJoin(Bien::class,"b")
             ->innerJoin(Proprietaire::class,"p")
-            ->Where("p = :id")
+            ->where("p.id = :id")
             ->setParameter('id', $this->getUser())
-            ->getQuery()
-            ->getResult()
             ;
+            dump($query);
             return $query
         ;
         } 

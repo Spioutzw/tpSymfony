@@ -30,7 +30,7 @@ class DashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-        
+
         if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->render('admin/dashbord.html.twig');
         } else {
@@ -52,20 +52,30 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
 
         if ($this->isGranted('ROLE_ADMIN')) {
+
             yield MenuItem::linkToCrud('Propriétaire', 'fas fa-list', Proprietaire::class);
             yield MenuItem::linkToCrud('Client', 'fas fa-list', Client::class);
-            yield MenuItem::linkToCrud('Prix des biens', 'fas fa-list', TypeBien::class);
-            yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
-            yield MenuItem::linkToCrud('Gestions des factures', 'fas fa-list', Facturation::class );
-            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class );
-            yield MenuItem::linkToCrud('Gestions des lignes de facture', 'fas fa-list', LigneFacturation::class );
 
+
+            yield MenuItem::subMenu('Gestion des factures', 'fas fa-file-invoice')->setSubItems([
+                MenuItem::linkToCrud('Factures client', 'fas fa-list', Facturation::class),
+                MenuItem::linkToCrud('Ligne de facture', 'fas fa-list', LigneFacturation::class)
+            ]);
+
+            yield MenuItem::subMenu('Gestion des biens', 'fas fa-file-invoice')->setSubItems([
+                MenuItem::linkToCrud("Gestions de l'affichage", 'fas fa-list', Bien::class),
+                MenuItem::linkToCrud('Gestion des prix', 'fas fa-list', TypeBien::class)
+            ]);
+
+            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class);
         } else if ($this->isGranted('ROLE_PROPRIO')) {
-            yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-list', Bien::class);
-            yield MenuItem::linkToCrud('Gestions des factures', 'fas fa-list', Facturation::class );
-            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class );
-            yield MenuItem::linkToCrud('Gestions des lignes de facture', 'fas fa-list', LigneFacturation::class );
 
+            yield MenuItem::linkToCrud('Gestion des biens', 'fas fa-house-user', Bien::class);
+            yield MenuItem::subMenu('Gestion des factures', 'fas fa-file-invoice')->setSubItems([
+                MenuItem::linkToCrud('Factures client', 'fas fa-list', Facturation::class),
+                MenuItem::linkToCrud('Ligne de facture', 'fas fa-list', LigneFacturation::class)
+            ]);
+            yield MenuItem::linkToCrud('Gestions des locations', 'fas fa-list', Location::class);
         }
     }
 }

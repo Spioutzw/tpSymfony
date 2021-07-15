@@ -39,6 +39,11 @@ class Facturation
      */
     private $ligneFacturations;
 
+    public function __toString(): string
+    {
+      return $this->getClient();
+    }
+
     public function __construct()
     {
         $this->ligneFacturations = new ArrayCollection();
