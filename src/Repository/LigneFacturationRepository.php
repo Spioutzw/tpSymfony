@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Facturation;
 use App\Entity\LigneFacturation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,9 +28,11 @@ class LigneFacturationRepository extends ServiceEntityRepository
     }
 
     public function findLastFacture() {
-        return $this->createQueryBuilder('f')
+        return $this->createQueryBuilder('lf')
         ->orderBy('f.id',"desc")
-        ->setMaxResults(1)
+        ->join(Facturation::class,"f")
+        ->where("lf.Facture = f")
+        ->setMaxResults(3)
         ->getQuery()
         ->getResult();
     }

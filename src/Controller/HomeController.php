@@ -7,10 +7,13 @@ use App\Entity\Facturation;
 use App\Entity\LigneFacturation;
 use App\Entity\Location;
 use App\Entity\Tarif;
+use App\Form\BienType;
 use App\Form\LocationType;
 use App\Repository\BienRepository;
 use App\Repository\ClientRepository;
 use App\Repository\FacturationRepository;
+use App\Repository\LigneFacturationRepository;
+use App\Repository\LocationRepository;
 use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,29 +30,51 @@ class HomeController extends AbstractController
 
     private $repoBien,
             $repoClient,
+            $repoLigneFacture,
+            $repoLocation,
             $repoFacturation;
 
 
-    public function __construct(BienRepository $bienRepository, ClientRepository $clientRepository, FacturationRepository $facturationRepository)
+    public function __construct(BienRepository $bienRepository, ClientRepository $clientRepository, FacturationRepository $facturationRepository, LigneFacturationRepository $ligneFacturationRepository, LocationRepository $locationRepository)
     {
         $this->repoBien = $bienRepository;
         $this->repoClient = $clientRepository;
         $this->repoFacturation = $facturationRepository;
+        $this->repoLigneFacture = $ligneFacturationRepository;
+        $this->repoLocation = $locationRepository;
     }
 
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/home", name="home", methods={"GET","POST"})
      */
     public function index(): Response
     {
-       dump($results = $this->repoBien->findById($this->getUser()));
+        $form = $this->createForm(BienType::class);
 
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
-            'results' => $results
+            'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/listebiensf", name="lbf", methods={"GET","POST"})
+     */
+
+     public function filtreBien(Request $request, PaginatorInterface $paginator) {
+
+         $typeBien = $request->get('bien')["Type"];
+
+        $biens =$paginator->paginate($this->repoBien->findBytype($typeBien),$request->query->getInt('page',1),9);
+
+        
+
+        return $this->render('home/filtreBien.html.twig', [
+                'typeBien' => $typeBien,
+                'biens' => $biens
+        ]);
+     }
 
     /**
      * @Route("/listbiens", name="lb")
@@ -66,6 +91,7 @@ class HomeController extends AbstractController
 
      /**
       * @Route("/listbiens/{id}", methods={"GET","POST"}, name="det")
+      * 
       */
 
      public function detailBook(int $id, Request $request, MailerInterface $mailer, ClientRepository $client)
@@ -83,6 +109,7 @@ class HomeController extends AbstractController
          $ligneFactureTaxe = new LigneFacturation();
          $ligneFacturePiscine = new LigneFacturation();
          $ligneFactureBienPrix = new LigneFacturation();
+         $dompdf = new Dompdf();
 
          
          $lastfacture = $this->repoFacturation->findLastFacture();
@@ -99,7 +126,8 @@ class HomeController extends AbstractController
     
              $facture->setClient($location->getClient())
              ->setDateFacturation(new DateTime("now"))
-             ->setNumeroIdentification( ($lastfacture) ? ($lastfacture[0]->getNumeroIdentification()) + 1 : 1) ;
+             ->setNumeroIdentification( ($lastfacture) ? ($lastfacture[0]->getNumeroIdentification()) + 1 : 1)
+              ;
 
              $ligneFactureTaxe->setFacture($facture)
              ->setLibelle("Taxe")
@@ -116,18 +144,18 @@ class HomeController extends AbstractController
              ->setReference(3)
              ->setPrix(($location->getDateArrive()->diff($location->getDateDepart())->format("%a")) * $location->getBien()->getType()->getPrix());
                
+             dump(($location->getDateArrive()->diff($location->getDateDepart())->format("%a")) * $location->getBien()->getType()->getPrix());
            
              $entityManager = $this->getDoctrine()->getManager();
              $entityManager->persist($location);
-             $entityManager->persist($facture);
+             
              $entityManager->persist($ligneFactureTaxe);
              $entityManager->persist($ligneFacturePiscine);
+             $entityManager->persist($facture);
              $entityManager->persist($ligneFactureBienPrix);
              $entityManager->flush();
 
-             $dompdf = new Dompdf();
-
-              $html = $this->renderView("home/facture.html.twig", [
+              $html = $this->render("home/factureEmail.html.twig", [
                   'bien' => $bien,
                   'client' => $client->findLastUser(),
                   'location' => $location,
@@ -137,21 +165,39 @@ class HomeController extends AbstractController
                   'ligneFactureTaxe' => $ligneFactureTaxe
               ]);
 
-             $dompdf->loadHtml($html)
-             ->setPaper('A4');
-             $dompdf->render();
+              $dompdf->loadHtml($html->getContent());
+              $dompdf->render();
+              $output = $dompdf->output();
+              $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/facture/';
 
+              
+            
+              $Client = $client->findLastUser();
+              $ClientNom = $Client[0]->getNom()? : $Client->getNom() ;
+              $ClientPrenom = $Client[0]->getpreNom() ?:  $Client->getpreNom()  ;
 
+              $pdffilepath = $publicDirectory . $ClientNom."_".$ClientPrenom."_facture.pdf";
+              file_put_contents($pdffilepath,$output);
+
+             
+
+            $emailClient = $client->findLastUser();
 
              $email = (new Email())
              ->from(new Address('matthieu.roquigny.camping@gmail.com', 'Espadrille Volante Bot'))
-             ->to($this->getUser())
+             ->to($emailClient["0"]->getEmail())
              ->subject("Facture Reservation")
-             ->attach();
-
-             return $this->redirectToRoute('lb');
+             ->attachFromPath($pdffilepath, $ClientNom."_".$ClientPrenom."_facture.pdf");
 
              
+             $mailer->send($email);
+
+
+             $entityManager->flush();
+
+
+
+             return $this->redirectToRoute('detf');
 
          }
 
@@ -161,7 +207,23 @@ class HomeController extends AbstractController
          ]);
      }
 
-     public function detailFacture() {
-            
-     }
+     /**
+      * @Route("/facture/", methods={"GET","POST"}, name="detf")
+      */
+
+      public function getFacture (): Response {
+            $facture = $this->repoFacturation->findLastFacture();
+            $location = $this->repoLocation->findLastLocation();
+            $client = $this->repoClient->findLastUser();
+            $ligneFacture = $this->repoLigneFacture->findLastFacture();
+
+            return $this->render("home/facture.html.twig", [
+               //dump($ligneFacture),
+                'client' => $client,
+                'location' => $location,
+                'facture' => $facture,
+                'ligneFacture' => $ligneFacture
+            ]);
+      }
+     
 }

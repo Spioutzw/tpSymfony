@@ -6,9 +6,13 @@ use App\Repository\FacturationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=FacturationRepository::class)
+ * 
  */
 class Facturation
 {
@@ -38,6 +42,8 @@ class Facturation
      * @ORM\OneToMany(targetEntity=LigneFacturation::class, mappedBy="Facture")
      */
     private $ligneFacturations;
+
+
 
     public function __toString(): string
     {
@@ -119,4 +125,7 @@ class Facturation
 
         return $this;
     }
+
+   
+
 }

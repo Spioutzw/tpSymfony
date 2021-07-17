@@ -26,6 +26,14 @@ class LocationRepository extends ServiceEntityRepository
 
     }
 
+    public function findLastLocation() {
+        return $this->createQueryBuilder('l')
+        ->orderBy('l.id',"desc")
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getResult();
+    }
+
     // public function locationByProprio() {
     //     return $this->createQueryBuilder("l")
     //     ->select("l.location.*","l.proprietaire.nom")

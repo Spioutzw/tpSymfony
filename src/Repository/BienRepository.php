@@ -51,6 +51,14 @@ class BienRepository extends ServiceEntityRepository
             ; // retour d'un tableau d'objet hydraté selon les données de la base
     }
 
+    public function findBytype($typeBien) {
+        return $this->createQueryBuilder("b")
+            ->where("b.Type = :id")
+            ->setParameter('id', $typeBien)
+            ->getQuery()
+            ->getResult();
+    }
+
     
 
     // /**

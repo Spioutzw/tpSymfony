@@ -2,37 +2,38 @@
 
 {% block body %}
 	<div class="jumbotron text-capitalize text-center">
-		<h2>Liste des Biens</h2>
+		<h2>Liste édité à partir de
+			{{ biens[0].Type}}</h2>
 	</div>
 	<div class="container">
 		<div class="row">
 			<div class="col">
 				<div class="row d-flex flex-row justify-content-center">
-					{% for result in results %}
+					{% for bien in biens %}
 						<div class="card mb-4 me-4" style="width: 30%;">
 							<div class="card-body">
-								<h4 class="card-title">{{ result.Type }}</h4>
-								<h4 class="card-title">{{ result.Proprietaire }}</h4>
+								<h4 class="card-title">{{ bien.Type }}</h4>
+								<h4 class="card-title">{{ bien.Proprietaire }}</h4>
 
 								{#            <a href="/detail/{book.id}" class="btn btn-primary btn-sm">détail</a>#}
 								{# <a href="{{ path('det', { id: book.id } ) }}" class="btn btn-primary btn-sm">détail</a> #}
-								<img class="card-img" src="{{ vich_uploader_asset(result, 'imageFile') }}"></img>
+								<img class="card-img" src="{{ vich_uploader_asset(bien, 'imageFile') }}"></img>
 						</div>
 						<div class="card-footer">
-							<a class="btn btn-primary btn-primary" href="{{path('det',{id: result.id})}}" role="button">Détail</a>
+							<a class="btn btn-primary" href="{{path('det',{id: bien.id})}}" role="button">Détail</a>
 						</div>
 
 					</div>
 				{% endfor %}
-				<div class=" d-flex justify-content-between">
-					<div>
-						<a class="btn btn-dark text-white" href="{{path("home")}}">home</a>
+				<div>
+					<div class=" d-flex justify-content-end">
+						{{ knp_pagination_render(biens) }}
 					</div>
-					<div>
-						{{ knp_pagination_render(results) }}
-					</div>
-
+                    <div>
+                        <a href="{{path("home")}}">home</a>
+                    </div>
 				</div>
+
 			</div>
 
 		</div>

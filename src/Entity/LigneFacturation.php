@@ -33,7 +33,7 @@ class LigneFacturation
     private $Reference;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Facturation::class, inversedBy="ligneFacturations")
+     * @ORM\ManyToOne(targetEntity=Facturation::class, inversedBy="ligneFacturations", cascade={"persist", "remove"})
      */
     private $Facture;
 

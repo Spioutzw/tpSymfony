@@ -6,11 +6,14 @@
 			<div class="col-md-8">
 				<div class="card">
 					<div class="d-flex flex-row p-2">
-						<img src="https://i.imgur.com/vzlPPh3.png" width="48">
+						<img class= "pe-2" src="https://image.freepik.com/vecteurs-libre/dessines-main-camping-logo-templates_23-2147542188.jpg" width="150">
 						<div class="d-flex flex-column">
-							<span class="font-weight-bold">Facture</span>
-							<small>{{facture.numero_identification}}</small>
-                            <span>{{facture.date_facturation}}</span>
+							<span class="font-weight-bold">Facture Camping</span>
+							{% for factureone in facture %}
+								<small>n°{{factureone.numeroIdentification }}
+								</small>
+								<span>Date de facturation: {{factureone.dateFacturation|date("d/m/Y")}}</span>
+							{% endfor %}
 						</div>
 					</div>
 					<hr>
@@ -23,12 +26,16 @@
 								</tr>
 								<tr class="content">
 									<td class="font-weight-bold">
-										{{client.Nom ~ client.Prenom}}
-										<br>{{client.adresse}}</td>
+										{% for oneclient in client %}
+											{{oneclient.Nom ~ " " ~ oneclient.Prenom}}
+											<br>{{oneclient.adresse}}</td>
+									{% endfor %}
 									<td class="font-weight-bold">
-										{{bien.Proprietaire.Nom}}
-										<br>
-										{{bien.Proprietaire.adresse}}</td>
+										{% for onelocation in location %}
+											{{onelocation.Bien.Proprietaire.Nom}}
+											<br>
+											{{onelocation.Bien.Proprietaire.adresse}}</td>
+									{% endfor %}
 								</tr>
 							</tbody>
 						</table>
@@ -38,30 +45,19 @@
 						<table class="table table-borderless">
 							<tbody>
 								<tr class="add">
-									<td>Description</td>
-									<td>Days</td>
-									<td>Prix</td>
-									<td class="text-center">Total</td>
+									<td class="text-left">Reference</td>
+									<td class="text-left">Description</td>
+									<td class="text-center">Prix</td>
 								</tr>
-								
+								{% for oneLigneFacture in ligneFacture %}
+
 									<tr class="content">
-										<td>{{ligneFactureTaxe.reference}}</td>
-										<td>{{ligneFactureTaxe.libelle}}</td>
-										<td class="text-center">{{ligneFactureTaxe.prix}}</td>
+										<td>{{oneLigneFacture.reference}}</td>
+										<td>{{oneLigneFacture.libelle}}</td>
+										<td class="text-center">{{oneLigneFacture.prix}}
+											€</td>
 									</tr>
-
-                                    <tr class="content">
-										<td>{{ligneFactureBienPrix.reference}}</td>
-										<td>{{ligneFactureBienPrix.libelle}}</td>
-										<td class="text-center">{{ligneFactureBienPrix.prix}}</td>
-									</tr>
-
-                                    <tr class="content">
-										<td>{{ligneFacturePiscine.reference}}</td>
-										<td>{{ligneFacturePiscine.libelle}}</td>
-										<td class="text-center">{{ligneFacturePiscine.prix}}</td>
-									</tr>
-								
+								{% endfor %}
 							</tbody>
 						</table>
 					</div>
@@ -70,10 +66,19 @@
 						<table class="table table-borderless">
 							<tbody>
 								<tr class="add">
+									<td></td>
+									<td></td>
 									<td class="text-center">Total</td>
 								</tr>
 								<tr class="content">
-									<td class="text-center">{{ligneFactureBienPrix.prix + ligneFacturePiscine.prix + ligneFactureTaxe.prix}}</td>
+									{% set total = 0 %}
+									{% for oneLigneFacture in ligneFacture %}
+										{% set total = total + oneLigneFacture.prix %}
+									{% endfor %}
+									<td></td>
+									<td></td>
+									<td class="text-center">{{total}}
+										€</td>
 								</tr>
 							</tbody>
 						</table>

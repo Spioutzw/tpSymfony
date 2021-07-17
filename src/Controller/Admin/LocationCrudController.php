@@ -28,13 +28,10 @@ class LocationCrudController extends AbstractCrudController
     {
         
         if ($this->isGranted('ROLE_PROPRIO') || $this->isGranted('ROLE_ADMIN')) {
-        
             $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
             $query->select("entity")
             ->innerJoin("entity.Bien","b")
-            ->innerJoin("entity.Client","c")
-            ->innerJoin(Proprietaire::class,"p")
-            ->Where("p = :id")
+            ->Where("b.Proprietaire = :id")
             ->setParameter('id', $this->getUser())
             ->getQuery()
             ->getResult()

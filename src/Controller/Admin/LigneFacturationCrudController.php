@@ -36,11 +36,9 @@ class LigneFacturationCrudController extends AbstractCrudController
             $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
             $query->select("entity")
             ->innerJoin("entity.Facture", "f")
-            ->innerJoin(Client::class,"c")
             ->innerJoin(Location::class,"l")
             ->innerJoin(Bien::class,"b")
-            ->innerJoin(Proprietaire::class,"p")
-            ->Where("p = :id")
+            ->Where("b.Proprietaire = :id")
             ->setParameter('id', $this->getUser())
             ->getQuery()
             ->getResult()

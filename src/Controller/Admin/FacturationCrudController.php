@@ -7,6 +7,7 @@ use App\Entity\Facturation;
 use App\Entity\Location;
 use App\Entity\Proprietaire;
 use App\Repository\BienRepository;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -16,9 +17,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Orm\EntityRepository;
-
+use Vich\UploaderBundle\Form\Type\VichFileType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class FacturationCrudController extends AbstractCrudController
 {
@@ -34,12 +38,12 @@ class FacturationCrudController extends AbstractCrudController
         
             $query = $this->get(EntityRepository::class)->createQueryBuilder($searchDto, $entityDto, $fields, $filters);
             $query->select("entity")
-            ->innerJoin("entity.Client","c")
             ->innerJoin(Location::class,"l")
             ->innerJoin(Bien::class,"b")
-            ->innerJoin(Proprietaire::class,"p")
-            ->where("p.id = :id")
+            ->where("b.Proprietaire = :id")
             ->setParameter('id', $this->getUser())
+            ->getQuery()
+            ->getResult()
             ;
             dump($query);
             return $query
@@ -51,10 +55,16 @@ class FacturationCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new("id"),
-            DateField::new("Date Facturation"),
-            IntegerField::new("Numero Identification"),
-            AssociationField::new("Client")
+            IdField::new("id")->onlyOnIndex(),
+            DateField::new("dateFacturation","Date Facturation",),
+            IntegerField::new("numeroIdentification","Numero Identification"),
+            AssociationField::new("Client"),
+            TextField::new('facturePDFFile', 'PDF')
+            ->hideOnIndex()
+            ->setFormType(VichFileType::class),
+             ImageField::new('facturePDF','pdf')
+             ->setTemplatePath("/home/facture.html.twig")
+            ->onlyOnIndex()
         ];
     }
     

@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Bien;
+use App\Entity\TypeBien;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,10 +15,14 @@ class BienType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('image')
-            ->add('updatedAt')
-            ->add('Proprietaire')
-            ->add('Type')
+            ->setAction("/listebiensf")
+            ->setMethod("POST")
+            ->add('Type', EntityType::class, [
+                'class' => TypeBien::class,
+                'label' => 'type de biens',
+                'multiple' => false,
+            ])
+            ->add('submit',SubmitType::class,["label" => "Valider"])
         ;
     }
 
